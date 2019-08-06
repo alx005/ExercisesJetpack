@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SignInSample</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="message_default">Please Sign In :)</string>
+</resources>
