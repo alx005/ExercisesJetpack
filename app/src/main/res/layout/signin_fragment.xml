@@ -4,7 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <import type="com.google.signinsample.data.SignInViewModel.State" />
+        <variable
+            name="model"
+            type="com.google.signinsample.data.SignInViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +24,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:ems="10"
+            android:text="@={model.password}"
             android:hint="@string/password_hint"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,6 +39,7 @@
             android:layout_marginTop="92dp"
             android:layout_marginEnd="8dp"
             android:ems="10"
+            android:text="@={model.username}"
             android:hint="@string/username_hint"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +54,7 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="8dp"
             android:text="SignIn"
+            android:enabled="@{model.state == State.READY_TO_SUBMIT ? true : false}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"

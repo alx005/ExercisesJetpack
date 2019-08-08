@@ -1,7 +1,9 @@
 package com.google.signinsample.data;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -18,8 +20,8 @@ public class SignInViewModel extends AndroidViewModel {
         NOT_READY_TO_SUBMIT, READY_TO_SUBMIT, IN_PROGRESS, SIGNED_IN, SIGN_IN_FAILED
     }
 
-    public MutableLiveData<String> username = new MutableLiveData<>();
-    public MutableLiveData<String> password = new MutableLiveData<>();
+    private MutableLiveData<String> username = new MutableLiveData<>();
+    private MutableLiveData<String> password = new MutableLiveData<>();
 
     private String TAG = SignInViewModel.class.getSimpleName();
 //    private UserRepository repo = UserRepository.getInstance();
@@ -56,13 +58,26 @@ public class SignInViewModel extends AndroidViewModel {
 //        });
 
 
+
     }
 
     private void updateState(){
-        Log.d(TAG, "Update State");
+        Log.d(TAG, "Update State ");
+
+    if (!TextUtils.isEmpty(username.getValue()) && !TextUtils.isEmpty(password.getValue()) && Patterns.EMAIL_ADDRESS.matcher(username.getValue()).matches() ) {
+            Log.d(TAG, "password and username is GOOD");
+            state.setValue(State.READY_TO_SUBMIT);
+            return;
+        }
+
+        state.setValue(State.NOT_READY_TO_SUBMIT);
+
     }
 
-    public LiveData<String> getUsername() {
+
+
+
+    public MutableLiveData<String> getUsername() {
         return username;
     }
 
@@ -72,5 +87,9 @@ public class SignInViewModel extends AndroidViewModel {
 
     public void setUsername(MutableLiveData<String> username) {
         this.username = username;
+    }
+
+    public MediatorLiveData<State> getState() {
+        return state;
     }
 }
