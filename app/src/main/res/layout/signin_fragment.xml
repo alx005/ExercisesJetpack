@@ -5,6 +5,8 @@
 
     <data>
         <import type="com.google.signinsample.data.SignInViewModel.State" />
+        <import type="androidx.core.content.ContextCompat" />
+        <import type="android.view.View" />
         <variable
             name="model"
             type="com.google.signinsample.data.SignInViewModel" />
@@ -15,21 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:text="@={model.password}"
-            android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
 
         <EditText
             android:id="@+id/username"
@@ -46,6 +33,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:text="@={model.password}"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/username" />
+
+
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
@@ -54,10 +57,25 @@
             android:layout_marginTop="40dp"
             android:layout_marginEnd="8dp"
             android:text="SignIn"
+            android:onClick="@{()->model.signIn()}"
             android:enabled="@{model.state == State.READY_TO_SUBMIT ? true : false}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password" />
+
+        <TextView
+            android:id="@+id/theMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="@{model.state == State.SIGNED_IN ? View.INVISIBLE  : View.VISIBLE }"
+            android:text="@{context.getString(model.message)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

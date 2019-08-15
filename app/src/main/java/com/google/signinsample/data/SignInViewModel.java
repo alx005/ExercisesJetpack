@@ -24,17 +24,17 @@ public class SignInViewModel extends AndroidViewModel {
     private MutableLiveData<String> password = new MutableLiveData<>();
 
     private String TAG = SignInViewModel.class.getSimpleName();
-//    private UserRepository repo = UserRepository.getInstance();
+    private UserRepository repo = UserRepository.getInstance();
     private MediatorLiveData<State> state = new MediatorLiveData<>();
-//    private LiveData<Resource<User>> user = repo.getUser();
-//    private MediatorLiveData<Integer> message = new MediatorLiveData<>();
+    private LiveData<Resource<User>> user = repo.getUser();
+    private MediatorLiveData<Integer> message = new MediatorLiveData<>();
 
 
     public SignInViewModel(@NonNull Application application) {
         super(application);
 
         state.setValue(State.NOT_READY_TO_SUBMIT);
-//        message.setValue(R.string.message_default);
+        message.setValue(R.string.message_default);
 
         state.addSource(username, new Observer<String>() {
             @Override
@@ -50,21 +50,34 @@ public class SignInViewModel extends AndroidViewModel {
             }
         });
 
-//        state.addSource(user, new Observer<Resource<User>>() {
-//            @Override
-//            public void onChanged(Resource<User> userResource) {
-//                updateState();
-//            }
-//        });
-
-
+        state.addSource(user, new Observer<Resource<User>>() {
+            @Override
+            public void onChanged(Resource<User> userResource) {
+                updateState();
+            }
+        });
 
     }
 
     private void updateState(){
         Log.d(TAG, "Update State ");
 
-    if (!TextUtils.isEmpty(username.getValue()) && !TextUtils.isEmpty(password.getValue()) && Patterns.EMAIL_ADDRESS.matcher(username.getValue()).matches() ) {
+
+        if (user.getValue().getState() == Resource.State.SUCCESS && !TextUtils.isEmpty(user.getValue().getData().id)) {
+            //move to the next screen
+            state.setValue(State.SIGNED_IN);
+            Log.d(TAG, "sign in success");
+            return;
+        } else if (user.getValue().getState() == Resource.State.ERROR) {
+            //move to the next screen
+            Log.d(TAG, "sign in error");
+            state.setValue(State.READY_TO_SUBMIT);
+            message.setValue(R.string.message_failed);
+            return;
+        }
+
+
+        if (!TextUtils.isEmpty(username.getValue()) && !TextUtils.isEmpty(password.getValue()) && Patterns.EMAIL_ADDRESS.matcher(username.getValue()).matches() ) {
             Log.d(TAG, "password and username is GOOD");
             state.setValue(State.READY_TO_SUBMIT);
             return;
@@ -75,7 +88,10 @@ public class SignInViewModel extends AndroidViewModel {
     }
 
 
-
+    public void signIn() {
+        state.setValue(State.IN_PROGRESS);
+        repo.signIn(username.getValue(), password.getValue());
+    }
 
     public MutableLiveData<String> getUsername() {
         return username;
@@ -91,5 +107,9 @@ public class SignInViewModel extends AndroidViewModel {
 
     public MediatorLiveData<State> getState() {
         return state;
+    }
+
+    public MediatorLiveData<Integer> getMessage() {
+        return message;
     }
 }

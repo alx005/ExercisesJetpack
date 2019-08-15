@@ -30,6 +30,8 @@ public class SignInFragment extends Fragment {
         binding.setLifecycleOwner(SignInFragment.this);
         View view = binding.getRoot();
 
+
+
         return view;
     }
 

@@ -3,4 +3,5 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="message_default">Please Sign In :)</string>
+    <string name="message_failed">Please try again :(</string>
 </resources>
